@@ -147,7 +147,7 @@ describe('Timestamp compression plugin', function() {
                 value: 'true'
             },
             {
-                name: 'The Target Value',
+                name: 'TheTargetValue',
                 type: 'DateTime',
                 value: '20071103T131805'
             }
@@ -188,7 +188,7 @@ describe('Timestamp compression plugin', function() {
                 ]
             },
             {
-                name: 'The Target Value',
+                name: 'TheTargetValue',
                 type: 'DateTime',
                 value: '20071103T131805'
             }
@@ -217,7 +217,7 @@ describe('Timestamp compression plugin', function() {
     describe('When a query comes for a timestamp through the plugin', function() {
         var values = [
             'state',
-            'The Target Value'
+            'TheTargetValue'
         ];
 
         beforeEach(function() {
@@ -226,7 +226,7 @@ describe('Timestamp compression plugin', function() {
             contextBrokerMock = nock('http://192.168.1.1:1026')
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', 'gardens')
-                .get('/v2/entities/light1/attrs?attrs=state,The%20Target%20Value')
+                .get('/v2/entities/light1/attrs?attrs=state,TheTargetValue')
                 .reply(200, utils.readExampleFile(
                     './test/unit/ngsiv2/examples/contextResponses/queryContextCompressTimestamp1Success.json'));
         });
@@ -235,9 +235,9 @@ describe('Timestamp compression plugin', function() {
             iotAgentLib.query('light1', 'Light', '', values, function(error, response) {
                 should.not.exist(error);
                 should.exist(response);
-                should.exist(response['The Target Value']);
-                should.exist(response['The Target Value'].value);
-                response['The Target Value'].value.should.equal('20071103T131805');
+                should.exist(response.TheTargetValue);
+                should.exist(response.TheTargetValue.value);
+                response.TheTargetValue.value.should.equal('20071103T131805');
                 done();
             });
         });
