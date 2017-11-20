@@ -26,7 +26,6 @@
 'use strict';
 
 var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
-    utils = require('../../../tools/utils'),
     should = require('should'),
     logger = require('logops'),
     nock = require('nock'),
@@ -106,7 +105,7 @@ describe('Event plugin', function() {
                 .post('/v2/entities/light1/attrs', function(body) {
                     var dateRegex = /\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d.\d{3}Z/;
 
-                    return body['activation'].value.match(dateRegex);
+                    return body.activation.value.match(dateRegex);
                 })
                 .reply(204);
         });
