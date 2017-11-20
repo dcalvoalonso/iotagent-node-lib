@@ -103,7 +103,7 @@ describe('Timestamp processing plugin', function() {
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', 'gardens')
                 .post('/v2/entities/light1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextProcessTimestamp1.json'))
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextProcessTimestamp.json'))
                 .reply(204);
         });
 
