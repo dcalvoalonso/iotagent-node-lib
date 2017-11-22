@@ -112,7 +112,7 @@ describe('Attribute alias plugin', function() {
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', 'gardens')
                 .post('/v2/entities/light1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextAliasPlugin.json'))
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextAliasPlugin1.json'))
                 .reply(204);
         });
 

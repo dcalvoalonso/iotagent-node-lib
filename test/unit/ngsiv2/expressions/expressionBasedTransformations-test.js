@@ -53,7 +53,28 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                         name: 'pressure',
                         type: 'Integer',
                         expression: '${@pressure * 20}'
-                    }
+                    },
+                    {
+                        object_id: 'e',
+                        name: 'consumption',
+                        type: 'Float',
+                        expression: '${@consumption * 20}'
+                    },
+                    {
+                        object_id: 'a',
+                        name: 'alive',
+                        type: 'Null',
+                    },
+                    {
+                        object_id: 'm',
+                        name: 'manufacturer',
+                        type: 'Object',
+                    },
+                    {
+                        object_id: 'r',
+                        name: 'revisions',
+                        type: 'Array',
+                    },
                 ]
             },
             'LightError': {
@@ -147,7 +168,7 @@ describe('Expression-based transformations plugin', function() {
         var values = [
             {
                 name: 'p',
-                type: 'centigrades',
+                type: 'Integer',
                 value: 52
             }
         ];
@@ -292,6 +313,122 @@ describe('Expression-based transformations plugin', function() {
 
         it('should not calculate the expression', function(done) {
             iotAgentLib.update('ws1', 'WeatherStation', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes without expressions and NULL type', function() {
+        var values = [
+            {
+                name: 'a',
+                type: 'NULL',
+                value: null
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin5.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes without expressions and Object type', function() {
+        var values = [
+            {
+                name: 'm',
+                type: 'Object',
+                value: { name: 'Manufacturer1', VAT: 'U12345678' }
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin6.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes without expressions and Object type', function() {
+        var values = [
+            {
+                name: 'r',
+                type: 'Object',
+                value: ['v0.1', 'v0.2', 'v0.3']
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin7.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes with expressions and type float', function() {
+        var values = [
+            {
+                name: 'e',
+                type: 'Float',
+                value: 0.44
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin8.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
                 should.not.exist(error);
                 contextBrokerMock.done();
                 done();
