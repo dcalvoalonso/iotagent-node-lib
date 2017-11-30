@@ -51,14 +51,12 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                     {
                         object_id: 'p',
                         name: 'pressure',
-                        type: 'Integer',
-                        expression: '${@pressure * 20}'
+                        type: 'Integer'
                     },
                     {
                         object_id: 'e',
                         name: 'consumption',
-                        type: 'Float',
-                        expression: '${@consumption * 20}'
+                        type: 'Float'
                     },
                     {
                         object_id: 'a',
@@ -107,6 +105,12 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                         expression: '${@pressure * 20}'
                     },
                     {
+                        object_id: 'e',
+                        name: 'consumption',
+                        type: 'Float',
+                        expression: '${@consumption * 20}'
+                    },
+                    {
                         object_id: 'h',
                         name: 'humidity',
                         type: 'Percentage'
@@ -135,11 +139,23 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                 type: 'WeatherStation',
                 lazy: [],
                 active: [
+
                     {
                         object_id: 'p',
-                        name: 'pressure25',
+                        name: 'pressure',
                         type: 'Integer',
-                        expression: '${@pressure * 20}'
+                        expression: '${trim(@spaces)}'
+                    },
+                    {
+                        object_id: 'p25',
+                        name: 'pressure25',
+                        type: 'Integer'
+                    },
+                    {
+                        object_id: 'e',
+                        name: 'consumption',
+                        type: 'Float',
+                        expression: '${trim(@spaces)}'
                     },
                     {
                         object_id: 'h',
@@ -193,36 +209,8 @@ describe('Expression-based transformations plugin', function() {
         });
     });
 
-    describe('When an update comes for attributes with expressions', function() {
-        var values = [
-            {
-                name: 'p',
-                type: 'Integer',
-                value: 52
-            }
-        ];
-
-        beforeEach(function() {
-            nock.cleanAll();
-
-            contextBrokerMock = nock('http://192.168.1.1:1026')
-                .matchHeader('fiware-service', 'smartGondor')
-                .matchHeader('fiware-servicepath', 'gardens')
-                .post('/v2/entities/light1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin1.json'))
-                .reply(204);
-        });
-
-        it('should apply the expression before sending the values', function(done) {
-            iotAgentLib.update('light1', 'Light', '', values, function(error) {
-                should.not.exist(error);
-                contextBrokerMock.done();
-                done();
-            });
-        });
-    });
-
     describe('When an update comes for expressions with syntax errors', function() {
+        // Case: Update for an attribute with bad expression
         var values = [
             {
                 name: 'p',
@@ -253,6 +241,7 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When there are expression attributes that are just calculated (not sent by the device)', function() {
+        // Case: Expression which results is sent as a new attribute     
         var values = [
             {
                 name: 'p',
@@ -287,9 +276,11 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an expression with multiple variables with numbers arrive', function() {
+        // Case: Update for integer and string attributes with expression  
+
         var values = [
             {
-                name: 'p',
+                name: 'p25',
                 type: 'Integer',
                 value: 52
             },
@@ -321,6 +312,8 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When a measure arrives and there is not enough information to calculate an expression', function() {
+        // Case: Update for integer with expression that needs more attributes  
+        
         var values = [
             {
                 name: 'p',
@@ -349,7 +342,192 @@ describe('Expression-based transformations plugin', function() {
         });
     });
 
+    describe('When an update comes for attributes without expressions and type integer', function() {
+        // Case: Update for an integer attribute without expression
+        var values = [
+            {
+                name: 'p',
+                type: 'Integer',
+                value: 52
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin11.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes with numeric expressions and type integer', function() {
+        // Case: Update for an integer attribute with arithmetic expression
+        var values = [
+            {
+                name: 'p',
+                type: 'Integer',
+                value: 52
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/ws1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin1.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('ws1', 'WeatherStation', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes with string expression and type integer', function() {
+        // Case: Update for an integer attribute with string expression
+        var values = [
+            {
+                name: 'p',
+                type: 'Integer',
+                value: 52
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/ws1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin11.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('ws1', 'WeatherStationMultiple', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes without expressions and type float', function() {
+        // Case: Update for a Float attribute without expressions
+
+        var values = [
+            {
+                name: 'e',
+                type: 'Float',
+                value: 0.44
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin12.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes with numeric expressions and type float', function() {
+        // Case: Update for a Float attribute with arithmetic expression
+
+        var values = [
+            {
+                name: 'e',
+                type: 'Float',
+                value: 0.44
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/ws1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin8.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('ws1', 'WeatherStation', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes with string expressions and type float', function() {
+        // Case: Update for a Float attribute with string expression
+
+        var values = [
+            {
+                name: 'e',
+                type: 'Float',
+                value: 0.44
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/ws1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin12.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('ws1', 'WeatherStationMultiple', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
     describe('When an update comes for attributes without expressions and NULL type', function() {
+        // Case: Update for a Null attribute without expression
+        
         var values = [
             {
                 name: 'a',
@@ -379,6 +557,8 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes with numeric expressions and NULL type', function() {
+        // Case: Update for a Null attribute with arithmetic expression       
+
         var values = [
             {
                 name: 'a',
@@ -408,6 +588,8 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes with string expressions and NULL type', function() {
+        // Case: Update for a Null attribute with string expression    
+
         var values = [
             {
                 name: 'a',
@@ -437,6 +619,8 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes without expressions and Boolean type', function() {
+        // Case: Update for a Boolean attribute without expression
+
         var values = [
             {
                 name: 'u',
@@ -466,6 +650,8 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes with numeric expressions and Boolean type', function() {
+        // Case: Update for a Boolean attribute with arithmetic expression
+
         var values = [
             {
                 name: 'u',
@@ -495,6 +681,7 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes with string expressions and Boolean type', function() {
+        // Case: Update for a Boolean attribute with string expression
         var values = [
             {
                 name: 'u',
@@ -524,6 +711,7 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes without expressions and Object type', function() {
+        // Case: Update for a JSON document attribute without expression   
         var values = [
             {
                 name: 'm',
@@ -553,6 +741,8 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes without expressions and Object type', function() {
+        // Case: Update for a JSON array attribute without expression
+
         var values = [
             {
                 name: 'r',
@@ -581,32 +771,4 @@ describe('Expression-based transformations plugin', function() {
         });
     });
 
-    describe('When an update comes for attributes with expressions and type float', function() {
-        var values = [
-            {
-                name: 'e',
-                type: 'Float',
-                value: 0.44
-            }
-        ];
-
-        beforeEach(function() {
-            nock.cleanAll();
-
-            contextBrokerMock = nock('http://192.168.1.1:1026')
-                .matchHeader('fiware-service', 'smartGondor')
-                .matchHeader('fiware-servicepath', 'gardens')
-                .post('/v2/entities/light1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin8.json'))
-                .reply(204);
-        });
-
-        it('should apply the expression before sending the values', function(done) {
-            iotAgentLib.update('light1', 'Light', '', values, function(error) {
-                should.not.exist(error);
-                contextBrokerMock.done();
-                done();
-            });
-        });
-    });
 });
