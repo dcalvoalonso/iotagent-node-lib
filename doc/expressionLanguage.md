@@ -177,9 +177,9 @@ The following table shows expressions and their expected outcomes for a measure 
 | '"Pruebas " + "De Strings"' | 'Pruebas De Strings'  |
 | '@name value is @value'     | 'DevId629 value is 6' |
 
-## <a name="NGSIv2 support"/> NGSIv2 support
+## <a name="ngsiv2"/> NGSIv2 support
 
-As it is explained in (#types), expressions can have two return types: String or Number, being the former one the default. Whenever a expression is executed without error, its result will be cast to the configured type. 
+As it is explained in previous sections, expressions can have two return types: String or Number, being the former one the default. Whenever a expression is executed without error, its result will be cast to the configured type. 
 
 On one hand, in NGSIv1 since all attributes'values are string, in the expression parser the expression type is set always to String and the transformation of the information coming from the SouthBound is done using replace instruction. Therefore, values sent to the CB will always be Strings. This can be seen in (#execution) example.
 
