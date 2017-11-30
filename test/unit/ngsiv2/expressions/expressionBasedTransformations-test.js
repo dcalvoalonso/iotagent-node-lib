@@ -241,7 +241,7 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When there are expression attributes that are just calculated (not sent by the device)', function() {
-        // Case: Expression which results is sent as a new attribute     
+        // Case: Expression which results is sent as a new attribute
         var values = [
             {
                 name: 'p',
@@ -276,7 +276,7 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an expression with multiple variables with numbers arrive', function() {
-        // Case: Update for integer and string attributes with expression  
+        // Case: Update for integer and string attributes with expression
 
         var values = [
             {
@@ -312,8 +312,8 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When a measure arrives and there is not enough information to calculate an expression', function() {
-        // Case: Update for integer with expression that needs more attributes  
-        
+        // Case: Update for integer with expression that needs more attributes
+
         var values = [
             {
                 name: 'p',
@@ -527,7 +527,7 @@ describe('Expression-based transformations plugin', function() {
 
     describe('When an update comes for attributes without expressions and NULL type', function() {
         // Case: Update for a Null attribute without expression
-        
+
         var values = [
             {
                 name: 'a',
@@ -557,7 +557,7 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes with numeric expressions and NULL type', function() {
-        // Case: Update for a Null attribute with arithmetic expression       
+        // Case: Update for a Null attribute with arithmetic expression
 
         var values = [
             {
@@ -588,7 +588,7 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes with string expressions and NULL type', function() {
-        // Case: Update for a Null attribute with string expression    
+        // Case: Update for a Null attribute with string expression
 
         var values = [
             {
@@ -711,7 +711,7 @@ describe('Expression-based transformations plugin', function() {
     });
 
     describe('When an update comes for attributes without expressions and Object type', function() {
-        // Case: Update for a JSON document attribute without expression   
+        // Case: Update for a JSON document attribute without expression
         var values = [
             {
                 name: 'm',
