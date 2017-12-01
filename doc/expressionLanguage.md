@@ -193,7 +193,7 @@ Currently, the expression parser does not support JSON Arrays and JSON document.
 3. The output type will be cast again to the original attribute type.
   * If attribute type is "Integer" then the value is casted to integer (JSON number)
   * If attribute type is "Float" then the value is casted to float (JSON number)
-  * If attribute type is "Boolean" then the value is cast to boolean (JSON boolean)
+  * If attribute type is "Boolean" then the value is cast to boolean (JSON boolean). In order to do this cast, boolean module is being used: https://www.npmjs.com/package/boolean
   * If attribute type is "None" then the value is cast to null (JSON null)
 
 E.g.: if a device with the following provisioning information is provisioned in the IoTAgent:
@@ -212,7 +212,7 @@ status: true
 1. The expression `*` is a multiplication, so the expression type makes `status` to be casted to Number. The cast of `true` to number is 1 (everything with a "value" is true in JavasScript).
 2. Expression is evaluated, resulting in 20
 3. 20 is cast to `20` since Expression Plugin always use String as Expression type.
-4. The attribute type is `Boolean` so the result is casted to Boolean before sending it to CB. The cast of `20` to boolean is false (only `true` will be cast to true).
+4. The attribute type is `Boolean` so the result is casted to Boolean before sending it to CB. The cast of `20` to boolean is false (check which values (boolean)[https://www.npmjs.com/package/boolean] considers equivalent to true).
 
 More examples of this workflow are presented below for the different types of attributes supported in NGSIv2 and the two possible types of expressions: Integer (arithmetic operations) or Strings.
 
