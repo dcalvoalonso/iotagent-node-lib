@@ -61,7 +61,7 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                     {
                         object_id: 'a',
                         name: 'alive',
-                        type: 'Null',
+                        type: 'None',
                     },
                     {
                         object_id: 'u',
@@ -123,7 +123,7 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                     {
                         object_id: 'a',
                         name: 'alive',
-                        type: 'Null',
+                        type: 'None',
                         expression: '${@alive *  20}'
                     },
                     {
@@ -144,7 +144,7 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                         object_id: 'p',
                         name: 'pressure',
                         type: 'Integer',
-                        expression: '${trim(@spaces)}'
+                        expression: '${trim(@pressure)}'
                     },
                     {
                         object_id: 'p25',
@@ -155,7 +155,7 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                         object_id: 'e',
                         name: 'consumption',
                         type: 'Float',
-                        expression: '${trim(@spaces)}'
+                        expression: '${trim(@consumption)}'
                     },
                     {
                         object_id: 'h',
@@ -170,14 +170,14 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                     {
                         object_id: 'a',
                         name: 'alive',
-                        type: 'Null',
-                        expression: '${trim(@spaces)}'
+                        type: 'None',
+                        expression: '${trim(@alive)}'
                     },
                     {
                         object_id: 'u',
                         name: 'updated',
                         type: 'Boolean',
-                        expression: '${trim(@spaces)}'
+                        expression: '${trim(@updated)}'
                     },
                 ]
             }
@@ -218,17 +218,6 @@ describe('Expression-based transformations plugin', function() {
                 value: '52'
             }
         ];
-
-        beforeEach(function() {
-            nock.cleanAll();
-
-            contextBrokerMock = nock('http://192.168.1.1:1026')
-                .matchHeader('fiware-service', 'smartGondor')
-                .matchHeader('fiware-servicepath', 'gardens')
-                .post('/v2/entities/light1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin3.json'))
-                .reply(204);
-        });
 
         it('should apply the expression before sending the values', function(done) {
             iotAgentLib.update('light1', 'LightError', '', values, function(error) {
@@ -593,7 +582,7 @@ describe('Expression-based transformations plugin', function() {
         var values = [
             {
                 name: 'a',
-                type: 'NULL',
+                type: 'None',
                 value: null
             }
         ];

@@ -77,7 +77,7 @@ ${@humidity * 10}
 will give `500` as the result (i.e.: the value `'50'` is cast to number, to get `50`, that is then multiplied by 10). If
 this cast fails (because the value of the variable is not a number, e.g.: `'Fifty'`), the overall result will be `NaN`.
 
-### <a name="execution"/> Expression execution
+### <a name="#execution"/> Expression execution
 
 Whenever a new measurement arrives to the IoTAgent for a device with declared expressions, all of the expressions for
 the device will be checked for execution: for all the defined active attributes containing expressions, the IoTAgent
@@ -181,7 +181,7 @@ The following table shows expressions and their expected outcomes for a measure 
 
 As it is explained in previous sections, expressions can have two return types: String or Number, being the former one the default. Whenever an expression is executed without error, its result will be cast to the configured type. 
 
-On one hand, in NGSIv1 since all attributes' values are of type String, in the expression parser the expression type is set always to String and the transformation of the information coming from the SouthBound is done using replace instruction. Therefore, values sent to the CB will always be Strings. This can be seen in (#execution) example.
+On one hand, in NGSIv1 since all attributes' values are of type String, in the expression parser the expression type is set always to String and the transformation of the information coming from the SouthBound is done using replace instruction. Therefore, values sent to the CB will always be Strings. This can be seen in [execution](#execution) example.
 
 On the other hand, NGSIv2 fully supports all the types described in the JSON
 specification (string, number, boolean, object, array and null). Therefore, the result of an expression must be cast to the appropriate type (the type used to define the attribute) in order to avoid inconsistencies between the type field for an attribute and the type of the value that is being sent.
@@ -191,6 +191,10 @@ Currently, the expression parser does not support JSON Arrays and JSON document.
 1. Variables will be cast to Number or String depending on the expression type.
 2. The expression will be applied
 3. The output type will be cast again to the original attribute type.
+  * If attribute type is "Integer" then the value is casted to integer (JSON number)
+  * If attribute type is "Float" then the value is casted to float (JSON number)
+  * If attribute type is "Boolean" then the value is cast to boolean (JSON boolean)
+  * If attribute type is "None" then the value is cast to null (JSON null)
 
 E.g.: if a device with the following provisioning information is provisioned in the IoTAgent:
 ```
@@ -205,6 +209,7 @@ and a measurement with the following values arrive to the IoTAgent:
 status: true
 ```
 
-The value true will be sent to the Context Broker since true will be converted to 1 before applying the expression and its result (20) will be converted back to true (Everything With a "Value" is True in Javascript).
-
-
+1. The expression `*` is a multiplication, so the expression type makes `status` to be casted to Number. The cast of `true` to number is 1 (everything with a "value" is true in JavasScript).
+2. Expression is evaluated, resulting in 20
+3. 20 is cast to `20` since Expression Plugin always use String as Expression type.
+4. The attribute type is `Boolean` so the result is casted to Boolean before sending it to CB. The cast of `20` to boolean is 20 (everything with a "value" is true in JavasScript).
