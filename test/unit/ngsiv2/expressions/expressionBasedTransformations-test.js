@@ -520,7 +520,7 @@ describe('Expression-based transformations plugin', function() {
         var values = [
             {
                 name: 'a',
-                type: 'NULL',
+                type: 'None',
                 value: null
             }
         ];
@@ -551,7 +551,7 @@ describe('Expression-based transformations plugin', function() {
         var values = [
             {
                 name: 'a',
-                type: 'NULL',
+                type: 'None',
                 value: null
             }
         ];
