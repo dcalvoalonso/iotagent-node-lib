@@ -439,7 +439,7 @@ describe('Expression-based transformations plugin', function() {
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', 'gardens')
                 .post('/v2/entities/light1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin12.json'))
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin3.json'))
                 .reply(204);
         });
 
@@ -501,7 +501,7 @@ describe('Expression-based transformations plugin', function() {
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', 'gardens')
                 .post('/v2/entities/ws1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin12.json'))
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin3.json'))
                 .reply(204);
         });
 

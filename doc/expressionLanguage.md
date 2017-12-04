@@ -216,12 +216,12 @@ status: true
 
 More examples of this workflow are presented below for the different types of attributes supported in NGSIv2 and the two possible types of expressions: Integer (arithmetic operations) or Strings.
 
-* pressure: 52 -> ${@pressure * 20} -> ${ 52 * 20 } -> $ { 1040 } -> $ { "1040"} -> 1040
-* pressure: 52 -> ${trim(@pressure)} -> ${trim("52")} -> $ { "52" } -> $ { "52"} -> 52
-* consumption: 0.44 -> ${@consumption * 20} -> ${ 0.44 * 20 } -> $ { 8.8 } -> $ { "8.8"} -> 8.8
-* consumption: 0.44 -> ${trim(@consumption)} -> ${trim("0.44")} -> $ { "0.44" } -> $ { "0.44"} -> 0.44
-* active: null -> ${@active * 20} -> ${ 0 * 20 } -> $ { 0 } -> $ { "0"} -> null
-* active: null -> ${trim(@active)} -> ${trim("null")} -> $ { "null" } -> $ { "null"} -> null
-* update: true -> ${@update * 20} -> ${ 1 * 20 } -> $ { 20 } -> $ { "20"} -> False
-* update: false -> ${@update * 20} -> ${ 0 * 20 } -> $ { 0 } -> $ { "0"} -> False
-* update: true -> ${trim(@updated)} -> ${trim("true")} -> $ { "true" } -> $ { "true"} -> True
+* pressure (of type "Integer"): 52 -> ${@pressure * 20} -> ${ 52 * 20 } -> $ { 1040 } -> $ { "1040"} -> 1040
+* pressure (of type "Integer"): 52 -> ${trim(@pressure)} -> ${trim("52")} -> $ { "52" } -> $ { "52"} -> 52
+* consumption (of type "Float"): 0.44 -> ${@consumption * 20} -> ${ 0.44 * 20 } -> $ { 8.8 } -> $ { "8.8"} -> 8.8
+* consumption (of type "Float"): 0.44 -> ${trim(@consumption)} -> ${trim("0.44")} -> $ { "0.44" } -> $ { "0.44"} -> 0.44
+* active (of type "None"): null -> ${@active * 20} -> ${ 0 * 20 } -> $ { 0 } -> $ { "0"} -> null
+* active (of type "None"): null -> ${trim(@active)} -> ${trim("null")} -> $ { "null" } -> $ { "null"} -> null
+* update (of type "Boolean"): true -> ${@update * 20} -> ${ 1 * 20 } -> $ { 20 } -> $ { "20"} -> False
+* update (of type "Boolean"): false -> ${@update * 20} -> ${ 0 * 20 } -> $ { 0 } -> $ { "0"} -> False
+* update (of type "Boolean"): true -> ${trim(@updated)} -> ${trim("true")} -> $ { "true" } -> $ { "true"} -> True

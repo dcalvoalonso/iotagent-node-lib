@@ -1,8 +1,6 @@
 {
-  "id": "light1",
-  "type": "LightError",
-  "pressure":{
-    "type": "Hgmm",
-    "value": "1040"   
+  "consumption": {
+    "type": "Float",
+    "value": 0.44
   }
 }
