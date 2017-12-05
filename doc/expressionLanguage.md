@@ -111,12 +111,12 @@ The only expression rule that will be executed will be that of the 'fillingLevel
 
 ### <a name="types"/> Types
 
-Expressions can have two return types: String or Number. This return type must be configured for each attribute that
-is going to be converted. Default value type is String.
+The way the parse() function works (at expressionParser.js) is as follows:
 
-Whenever a expression is executed without error, its result will be cast to the configured type. If the conversion fails
-(e.g.: if the expression is null or a String and is casted to Number), the measurement update will fail, and an error
-will be reported to the device.
+- Expressions can have two return types: String or Number. This return type must be configured for each attribute that is going to be converted. Default value type is String.
+- Whenever an expression is executed without error, its result will be cast to the configured type. If the conversion fails (e.g.: if the expression is null or a String and is cast to Number), the measurement update will fail, and an error will be reported to the device.
+
+However, the usage that the Expression Translation plugin does of that function is using always String type. That means that at the end, the result of the expression will be always cast to String. However, in NGSIv2 that String result could be re-cast to the right type (i.e. the one defined for the attribute in the provision operation). Have a look at the [NGSIv2 section] for more information on this.
 
 ### <a name="values"/> Values
 
