@@ -77,7 +77,7 @@ ${@humidity * 10}
 will give `500` as the result (i.e.: the value `'50'` is cast to number, to get `50`, that is then multiplied by 10). If
 this cast fails (because the value of the variable is not a number, e.g.: `'Fifty'`), the overall result will be `NaN`.
 
-### <a name="#execution"/> Expression execution
+### <a name="execution"/> Expression execution
 
 Whenever a new measurement arrives to the IoTAgent for a device with declared expressions, all of the expressions for
 the device will be checked for execution: for all the defined active attributes containing expressions, the IoTAgent
@@ -130,7 +130,7 @@ As `spaces` attribute is not included, then the expression is not applied and th
 
 - Case 2: the following measure is received at the southbound interface:
 ```
-consumption: 0.44
+consumption: "0.44"
 spaces: "  foobar  "
 ```
 
@@ -223,7 +223,7 @@ specification (string, number, boolean, object, array and null). Therefore, the 
 
 Currently, the expression parser does not support JSON Arrays and JSON document. A new issue has been created to address this aspect https://github.com/telefonicaid/iotagent-node-lib/issues/568. For the rest of types the workflow will be the following:
 
-1. Variables will be cast to Number or String depending on the expression type.
+1. Variables will be cast to String no matter the expression type (see [comments above](#types) regarding this)
 2. The expression will be applied
 3. The output type will be cast again to the original attribute type.
   * If attribute type is "Integer" then the value is casted to integer (JSON number)
@@ -244,7 +244,7 @@ and a measurement with the following values arrive to the IoTAgent:
 status: true
 ```
 
-1. The expression `*` is a multiplication, so the expression type makes `status` to be casted to Number. The cast of `true` to number is 1 (everything with a "value" is true in JavasScript).
+1. The expression `*` is a multiplication, so the expression type makes `status` to be casted to Number. The cast of `true` to number is 1.
 2. Expression is evaluated, resulting in 20
 3. 20 is cast to `20` since Expression Plugin always use String as Expression type.
 4. The attribute type is `Boolean` so the result is casted to Boolean before sending it to CB. The cast of `20` to boolean is false (only `true` or `1` are cast to true).
