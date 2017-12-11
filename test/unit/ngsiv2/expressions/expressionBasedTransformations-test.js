@@ -78,6 +78,12 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                         name: 'revisions',
                         type: 'Array',
                     },
+                    {
+                        object_id: 'x',
+                        name: 'consumption_x',
+                        type: 'Float',
+                        expression: '${@pressure * 20}'
+                    }            
                 ]
             },
             'LightError': {
@@ -717,6 +723,101 @@ describe('Expression-based transformations plugin', function() {
                 .matchHeader('fiware-servicepath', 'gardens')
                 .post('/v2/entities/light1/attrs', utils.readExampleFile(
                     './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin7.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When there are expressions including other attributes and they are not updated', function() {
+
+        var values = [
+            {
+                name: 'x',
+                type: 'Float',
+                value: 0.44
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin12.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When there are expressions including other attributes and they are updated', function() {
+
+        var values = [
+            {
+                name: 'p',
+                type: 'Integer',
+                value: 10
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin13.json'))
+                .reply(204);
+        });
+
+        it('should apply the expression before sending the values', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When there are expressions including other attributes and they are updated (overriding situation)', function() {
+
+        var values = [
+            {
+                name: 'x',
+                type: 'Float',
+                value: 0.44
+            },
+            {
+                name: 'p',
+                type: 'Integer',
+                value: 10
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin13.json'))
                 .reply(204);
         });
 
