@@ -300,37 +300,6 @@ describe('Expression-based transformations plugin', function() {
         });
     });
 
-    describe('When a measure arrives and there is not enough information to calculate an expression', function() {
-        // Case: Update for integer with expression that needs more attributes
-
-        var values = [
-            {
-                name: 'p',
-                type: 'Integer',
-                value: 52
-            }
-        ];
-
-        beforeEach(function() {
-            nock.cleanAll();
-
-            contextBrokerMock = nock('http://192.168.1.1:1026')
-                .matchHeader('fiware-service', 'smartGondor')
-                .matchHeader('fiware-servicepath', 'gardens')
-                .post('/v2/entities/ws1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextExpressionPlugin1.json'))
-                .reply(204);
-        });
-
-        it('should not calculate the expression', function(done) {
-            iotAgentLib.update('ws1', 'WeatherStation', '', values, function(error) {
-                should.not.exist(error);
-                contextBrokerMock.done();
-                done();
-            });
-        });
-    });
-
     describe('When an update comes for attributes without expressions and type integer', function() {
         // Case: Update for an integer attribute without expression
         var values = [
