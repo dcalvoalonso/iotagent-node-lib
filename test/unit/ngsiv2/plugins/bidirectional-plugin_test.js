@@ -42,22 +42,6 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
             port: 4041
         },
         types: {
-            'Light': {
-                commands: [],
-                type: 'Light',
-                lazy: [
-                    {
-                        name: 'temperature',
-                        type: 'centigrades'
-                    }
-                ],
-                active: [
-                    {
-                        name: 'pressure',
-                        type: 'Hgmm'
-                    }
-                ]
-            }
         },
         service: 'smartGondor',
         subservice: 'gardens',
