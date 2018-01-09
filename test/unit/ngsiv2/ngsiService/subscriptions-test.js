@@ -76,7 +76,7 @@ describe('Subscription tests', function() {
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v2/subscriptions', function(body) {
-                    var expected = utils.readExampleFile('./test/unit/ngsiv2/examples' +
+                    var expectedBody = utils.readExampleFile('./test/unit/ngsiv2/examples' +
                         '/subscriptionRequests/simpleSubscriptionRequest.json');
                     if (!body.expires)
                     {
@@ -84,15 +84,16 @@ describe('Subscription tests', function() {
                     }
                     else if (moment(body.expires, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isValid())
                     {
-                        expected.expires = body.expires;
+                        expectedBody.expires = moment().add(iotAgentConfig.deviceRegistrationDuration);
+                        var expiresDiff = moment(expectedBody.expires).diff(body.expires, 'milliseconds');
+                        if (expiresDiff < 500) {
+                            delete expectedBody.expires;
+                            delete body.expires;
 
-                        if (JSON.stringify(expected) === JSON.stringify(body))
-                        {
-                            return true;
+                            return JSON.stringify(body) === JSON.stringify(expectedBody);
                         }
-                        else {
-                            return false;
-                        }
+
+                        return false;
                     }
                     else {
                         return false;
