@@ -90,7 +90,7 @@ describe('Subscription tests', function() {
                 .post('/v2/subscriptions', function(body) {
                     var expectedBody = utils.readExampleFile('./test/unit/ngsiv2/examples' +
                         '/subscriptionRequests/simpleSubscriptionRequest.json');
-                    // Note that expired field ins not included in the json used by this mock as it is a dynamic
+                    // Note that expired field is not included in the json used by this mock as it is a dynamic
                     // field. The following code performs such calculation and adds the field to the subscription
                     // payload of the mock.
                     if (!body.expires)
