@@ -148,7 +148,7 @@ describe('Bidirectional data plugin', function() {
         };
 
         beforeEach(function() {
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v2/subscriptions', function(body) {
@@ -175,7 +175,7 @@ describe('Bidirectional data plugin', function() {
                 .reply(200, utils.readExampleFile(
                     './test/unit/examples/contextResponses/createBidirectionalDeviceSuccess.json'));
 
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .delete('/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8')
@@ -207,7 +207,7 @@ describe('Bidirectional data plugin', function() {
             executedHandler = false;
 
         beforeEach(function() {
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v2/subscriptions', function(body) {
@@ -233,12 +233,6 @@ describe('Bidirectional data plugin', function() {
                     './test/unit/examples/contextRequests/createBidirectionalDevice.json'))
                 .reply(200, utils.readExampleFile(
                     './test/unit/examples/contextResponses/createBidirectionalDeviceSuccess.json'));
-
-            contextBrokerMock = nock('http://192.168.1.1:1026')
-                .matchHeader('fiware-service', 'smartGondor')
-                .matchHeader('fiware-servicepath', '/gardens')
-                .delete('/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8')
-                .reply(204);
         });
 
         afterEach(function() {
@@ -256,6 +250,7 @@ describe('Bidirectional data plugin', function() {
             request(options, function(error, response, body) {
                 request(notificationOptions, function(error, response, body) {
                     executedHandler.should.equal(true);
+                    contextBrokerMock.done();
                     done();
                 });
             });
@@ -272,6 +267,7 @@ describe('Bidirectional data plugin', function() {
             request(options, function(error, response, body) {
                 request(notificationOptions, function(error, response, body) {
                     response.statusCode.should.equal(200);
+                    contextBrokerMock.done();
                     done();
                 });
             });
@@ -302,6 +298,7 @@ describe('Bidirectional data plugin', function() {
 
             request(options, function(error, response, body) {
                 request(notificationOptions, function(error, response, body) {
+                    contextBrokerMock.done();
                     transformedHandler.should.equal(true);
                     done();
                 });
@@ -332,7 +329,7 @@ describe('Bidirectional data plugin', function() {
             };
 
         beforeEach(function() {
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v2/subscriptions', function(body) {
@@ -404,7 +401,7 @@ describe('Bidirectional data plugin', function() {
             };
 
         beforeEach(function() {
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v2/subscriptions', function(body) {
