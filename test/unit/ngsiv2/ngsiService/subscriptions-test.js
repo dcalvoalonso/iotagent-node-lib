@@ -72,7 +72,7 @@ describe('Subscription tests', function() {
                 .reply(200,
                     utils.readExampleFile('./test/unit/examples/contextResponses/createProvisionedDeviceSuccess.json'));
 
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v2/subscriptions', function(body) {
@@ -148,7 +148,7 @@ describe('Subscription tests', function() {
     });
     describe('When a client invokes the unsubscribe() function for an entity', function() {
         beforeEach(function(done) {
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .delete('/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8')
@@ -187,7 +187,7 @@ describe('Subscription tests', function() {
     });
     describe('When a client removes a device from the registry', function() {
         beforeEach(function(done) {
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .delete('/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8')
