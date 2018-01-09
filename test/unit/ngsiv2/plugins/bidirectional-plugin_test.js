@@ -118,6 +118,7 @@ describe('Bidirectional data plugin', function() {
                 })
                 .reply(201, null, {'Location': '/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8'});
 
+            // FIXME: change once NGISv2 device provisioning is implemented
             contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
@@ -167,6 +168,7 @@ describe('Bidirectional data plugin', function() {
                 })
                 .reply(201, null, {'Location': '/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8'});
 
+            // FIXME: change once NGISv2 device provisioning is implemented
             contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
@@ -226,6 +228,7 @@ describe('Bidirectional data plugin', function() {
                 })
                 .reply(201, null, {'Location': '/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8'});
 
+            // FIXME: change once NGISv2 device provisioning is implemented
             contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
@@ -348,6 +351,7 @@ describe('Bidirectional data plugin', function() {
                 })
                 .reply(201, null, {'Location': '/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8'});
 
+            // FIXME: change once NGISv2 device provisioning is implemented
             contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
@@ -420,6 +424,7 @@ describe('Bidirectional data plugin', function() {
                 })
                 .reply(201, null, {'Location': '/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8'});
 
+            // FIXME: change once NGISv2 device provisioning is implemented
             contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')

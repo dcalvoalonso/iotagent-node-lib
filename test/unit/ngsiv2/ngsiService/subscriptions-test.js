@@ -75,6 +75,7 @@ describe('Subscription tests', function() {
         nock.cleanAll();
 
         iotAgentLib.activate(iotAgentConfig, function() {
+            // FIXME: change once NGISv2 device provisioning is implemented
             contextBrokerMock = nock('http://192.168.1.1:1026')
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
