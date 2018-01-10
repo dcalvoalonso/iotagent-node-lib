@@ -21,6 +21,5 @@
     ],
     "attrsFormat": "normalized"
   },
-  "expires": "P1M",
   "throttling": 5
 }

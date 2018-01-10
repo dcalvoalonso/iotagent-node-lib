@@ -46,6 +46,17 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
         subservice: 'gardens',
         providerUrl: 'http://smartGondor.com',
         deviceRegistrationDuration: 'P1M',
+        // As it can be seen in
+        // https://github.com/telefonicaid/fiware-orion/blob/master/doc/manuals/user/walkthrough_apiv2.md#subscriptions,
+        // in NGSIv2, the `expires` element of the payload to create a subscription must be specified
+        // using the ISO 8601 standard format (e.g., 2016-04-05T14:00:00.00Z). However, in the IOTA,
+        // this value is load from the `deviceRegistrationDuration` property of the configuration file,
+        // which is expressed using ISO 8601 duration format (e.g., P1M). Therefore, in order to
+        // maintain compatibility with previous versions, for NGSIv2, the expires field is calculated
+        // adding the `deviceRegistrationDuration` property of the IOTA configuration file to the
+        // current date. This implies that in order to assert the value of the payload in the CB mock,
+        // we have to calculate dynamically the expected `expires` field.
+        // Please check line 86.
         throttling: 'PT5S'
     };
 
@@ -64,6 +75,7 @@ describe('Subscription tests', function() {
         nock.cleanAll();
 
         iotAgentLib.activate(iotAgentConfig, function() {
+            // FIXME: change once NGISv2 device provisioning is implemented
             contextBrokerMock = nock('http://192.168.1.1:1026')
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
@@ -72,27 +84,31 @@ describe('Subscription tests', function() {
                 .reply(200,
                     utils.readExampleFile('./test/unit/examples/contextResponses/createProvisionedDeviceSuccess.json'));
 
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v2/subscriptions', function(body) {
-                    var expected = utils.readExampleFile('./test/unit/ngsiv2/examples' +
+                    var expectedBody = utils.readExampleFile('./test/unit/ngsiv2/examples' +
                         '/subscriptionRequests/simpleSubscriptionRequest.json');
+                    // Note that expired field is not included in the json used by this mock as it is a dynamic
+                    // field. The following code performs such calculation and adds the field to the subscription
+                    // payload of the mock.
                     if (!body.expires)
                     {
                         return false;
                     }
                     else if (moment(body.expires, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isValid())
                     {
-                        expected.expires = body.expires;
+                        expectedBody.expires = moment().add(iotAgentConfig.deviceRegistrationDuration);
+                        var expiresDiff = moment(expectedBody.expires).diff(body.expires, 'milliseconds');
+                        if (expiresDiff < 500) {
+                            delete expectedBody.expires;
+                            delete body.expires;
 
-                        if (JSON.stringify(expected) === JSON.stringify(body))
-                        {
-                            return true;
+                            return JSON.stringify(body) === JSON.stringify(expectedBody);
                         }
-                        else {
-                            return false;
-                        }
+
+                        return false;
                     }
                     else {
                         return false;
@@ -147,7 +163,7 @@ describe('Subscription tests', function() {
     });
     describe('When a client invokes the unsubscribe() function for an entity', function() {
         beforeEach(function(done) {
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .delete('/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8')
@@ -155,7 +171,7 @@ describe('Subscription tests', function() {
 
             done();
         });
-        it('should change the expiration date of the subscription to 0s', function(done) {
+        it('should delete the subscription from the CB', function(done) {
             iotAgentLib.getDevice('MicroLight1', 'smartGondor', '/gardens', function(error, device) {
                 iotAgentLib.subscribe(device, ['attr_name'], null, function(error) {
                     iotAgentLib.unsubscribe(device, '51c0ac9ed714fb3b37d7d5a8', function(error) {
@@ -186,7 +202,7 @@ describe('Subscription tests', function() {
     });
     describe('When a client removes a device from the registry', function() {
         beforeEach(function(done) {
-            contextBrokerMock = nock('http://192.168.1.1:1026')
+            contextBrokerMock
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .delete('/v2/subscriptions/51c0ac9ed714fb3b37d7d5a8')
@@ -195,7 +211,7 @@ describe('Subscription tests', function() {
             done();
         });
 
-        it('should change the expiration dates of all its subscriptions to 0s', function(done) {
+        it('should delete the subscription from the CB', function(done) {
             iotAgentLib.getDevice('MicroLight1', 'smartGondor', '/gardens', function(error, device) {
                 iotAgentLib.subscribe(device, ['attr_name'], null, function(error) {
                     iotAgentLib.unregister(device.id, 'smartGondor', '/gardens', function(error) {
