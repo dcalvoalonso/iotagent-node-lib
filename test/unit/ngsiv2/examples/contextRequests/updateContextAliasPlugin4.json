@@ -1,0 +1,6 @@
+{
+  "active_power": {
+    "type": "Float",
+    "value": 0.45
+  }
+}
