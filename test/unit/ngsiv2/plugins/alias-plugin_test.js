@@ -216,6 +216,70 @@ describe('Attribute alias plugin', function() {
         });
     });
 
+    describe('When an update comes for attributes with aliases and integer type.' + 
+        'The IOTA sends the update without alias and using JSON native type', function() {
+            console.log('aaaaaaaaaaaaaaaaaaaaaaa');
+        var values = [
+            {
+                name: 'unix_timestamp',
+                type: 'Integer',
+                value: '99823423'
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+            .log(console.log)
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextAliasPlugin3.json'))
+                .reply(204);
+        });
+
+        it('should rename the attributes as expected by the mappings', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
+    describe('When an update comes for attributes with aliases and integer type.' + 
+        'The IOTA sends the update with alias and using JSON native type', function() {
+                        console.log('aaaaaaaaaaaaaaaaaaaaaaa');
+        var values = [
+            {
+                name: 'ut',
+                type: 'Integer',
+                value: '99823423'
+            }
+        ];
+
+        beforeEach(function() {
+            nock.cleanAll();
+
+            contextBrokerMock = nock('http://192.168.1.1:1026')
+            .log(console.log)
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', 'gardens')
+                .post('/v2/entities/light1/attrs', utils.readExampleFile(
+                    './test/unit/ngsiv2/examples/contextRequests/updateContextAliasPlugin3.json'))
+                .reply(204);
+        });
+
+        it('should rename the attributes as expected by the mappings', function(done) {
+            iotAgentLib.update('light1', 'Light', '', values, function(error) {
+                should.not.exist(error);
+                contextBrokerMock.done();
+                done();
+            });
+        });
+    });
+
     describe('When an update comes for attributes with aliases and float type', function() {
         var values = [
             {
