@@ -33,6 +33,7 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
     nock = require('nock'),
     contextBrokerMock,
     iotAgentConfig = {
+        checkSbStringCast :true,
         contextBroker: {
             host: '192.168.1.1',
             port: '1026',
@@ -66,17 +67,17 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
                     {
                         object_id: 'ut',
                         name: 'unix_timestamp',
-                        type: 'Integer'
+                        type: 'Number'
                     },
                     {
                         object_id: 'ap',
                         name: 'active_power',
-                        type: 'Float'                        
+                        type: 'Number'                        
                     },
                     {
                         object_id: 'ap',
                         name: 'active_power',
-                        type: 'Float'                        
+                        type: 'Number'                        
                     },
                     {
                         object_id: 's',
@@ -191,7 +192,7 @@ describe('Attribute alias plugin', function() {
         var values = [
             {
                 name: 'ut',
-                type: 'Integer',
+                type: 'Number',
                 value: '99823423'
             }
         ];
@@ -217,41 +218,11 @@ describe('Attribute alias plugin', function() {
     });
 
     describe('When an update comes for attributes with aliases and integer type.' + 
-        'The IOTA sends the update without alias and using JSON native type', function() {
-        var values = [
-            {
-                name: 'unix_timestamp',
-                type: 'Integer',
-                value: '99823423'
-            }
-        ];
-
-        beforeEach(function() {
-            nock.cleanAll();
-
-            contextBrokerMock = nock('http://192.168.1.1:1026')
-                .matchHeader('fiware-service', 'smartGondor')
-                .matchHeader('fiware-servicepath', 'gardens')
-                .post('/v2/entities/light1/attrs', utils.readExampleFile(
-                    './test/unit/ngsiv2/examples/contextRequests/updateContextAliasPlugin10.json'))
-                .reply(204);
-        });
-
-        it('should rename the attributes as expected by the mappings', function(done) {
-            iotAgentLib.update('light1', 'Light', '', values, function(error) {
-                should.not.exist(error);
-                contextBrokerMock.done();
-                done();
-            });
-        });
-    });
-
-    describe('When an update comes for attributes with aliases and integer type.' + 
         'The IOTA sends the update with alias and using JSON native type', function() {
         var values = [
             {
                 name: 'ut',
-                type: 'Integer',
+                type: 'Number',
                 value: '99823423'
             }
         ];

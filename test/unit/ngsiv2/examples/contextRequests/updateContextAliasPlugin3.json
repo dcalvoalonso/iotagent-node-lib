@@ -1,6 +1,6 @@
 {
   "unix_timestamp": {
-    "type": "Integer",
+    "type": "Number",
     "value": 99823423
   }
 }
