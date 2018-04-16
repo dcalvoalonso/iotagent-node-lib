@@ -33,7 +33,7 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
     nock = require('nock'),
     contextBrokerMock,
     iotAgentConfig = {
-        checkSbStringCast :true,
+        autocast: true,
         contextBroker: {
             host: '192.168.1.1',
             port: '1026',
