@@ -217,8 +217,7 @@ describe('Attribute alias plugin', function() {
         });
     });
 
-    describe('When an update comes for attributes with aliases and integer type.' + 
-        'The IOTA sends the update with alias and using JSON native type', function() {
+    describe('When an update comes for attributes with aliases and integer type.', function() {
         var values = [
             {
                 name: 'ut',
@@ -251,7 +250,7 @@ describe('Attribute alias plugin', function() {
         var values = [
             {
                 name: 'ap',
-                type: 'Float',
+                type: 'Number',
                 value: '0.45'
             }
         ];
@@ -280,7 +279,7 @@ describe('Attribute alias plugin', function() {
         var values = [
             {
                 name: 's',
-                type: 'boolean',
+                type: 'Boolean',
                 value: false
             }
         ];
