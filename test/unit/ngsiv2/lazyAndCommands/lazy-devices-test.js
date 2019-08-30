@@ -145,7 +145,8 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
 
 describe('IoT Agent Lazy Devices', function() {
     beforeEach(function(done) {
-        logger.setLevel('FATAL');
+        //logger.setLevel('FATAL');
+        logger.setLevel('DEBUG');
 
         var time = new Date(1438760101468); // 2015-08-05T07:35:01.468+00:00
         timekeeper.freeze(time);
@@ -236,12 +237,20 @@ describe('IoT Agent Lazy Devices', function() {
 
     describe('When a context query arrives to the IoT Agent', function() {
         var options = {
-                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/entities?id=Light:light1&attrs=dimming',
-                method: 'GET',
+                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/op/query',
+                method: 'POST',
                 json: true,
                 headers: {
                     'fiware-service': 'smartGondor',
-                    'fiare-servicepath': 'gardens'
+                    'fiware-servicepath': 'gardens'
+                },
+                body: {
+                    entities: [
+                        {
+                            id: 'Light:light1'
+                        }
+                    ],
+                    attrs: [ 'dimming' ]
                 }
             },
             sensorData = [
@@ -300,11 +309,20 @@ describe('IoT Agent Lazy Devices', function() {
 
     describe('When a context query arrives to the IoT Agent and no handler is set', function() {
         var options = {
-                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/entities?id=Light:light1&attrs=dimming',
-                method: 'GET',
+                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/op/query',
+                method: 'POST',
+                json: true,
                 headers: {
                     'fiware-service': 'smartGondor',
                     'fiware-servicepath': 'gardens'
+                },
+                body: {
+                    entities: [
+                        {
+                            id: 'Light:light1'
+                        }
+                    ],
+                    attrs: [ 'dimming' ]
                 }
             };
 
@@ -343,7 +361,7 @@ describe('IoT Agent Lazy Devices', function() {
 
         it('should return the empty value', function(done) {
             request(options, function(error, response, body) {
-                var entities = JSON.parse(body);
+                var entities = body;
                 entities[0].dimming.value.should.equal('');
                 done();
             });
@@ -352,12 +370,19 @@ describe('IoT Agent Lazy Devices', function() {
 
     describe('When a query arrives to the IoT Agent without any attributes', function() {
         var options = {
-                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/entities?id=Light:light1',
-                method: 'GET',
+                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/op/query',
+                method: 'POST',
                 json: true,
                 headers: {
                     'fiware-service': 'smartGondor',
                     'fiware-servicepath': 'gardens'
+                },
+                body: {
+                    entities: [
+                        {
+                            id: 'Light:light1'
+                        }
+                    ]
                 }
             },
             sensorData = [
@@ -417,13 +442,20 @@ describe('IoT Agent Lazy Devices', function() {
 
     describe('When a context query arrives to the IoT Agent for a type with static attributes', function() {
         var options = {
-                url: 'http://localhost:' + iotAgentConfig.server.port + 
-                '/v2/entities?id=Motion:motion1&attrs=moving,location',
-                method: 'GET',
+                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/op/query',
+                method: 'POST',
                 json: true,
                 headers: {
                     'fiware-service': 'smartGondor',
                     'fiware-servicepath': 'gardens'
+                },
+                body: {
+                    entities: [
+                        {
+                            id: 'Motion:motion1'
+                        }
+                    ],
+                    attrs: [ 'moving', 'location']
                 }
             },
             sensorData = [
@@ -545,14 +577,21 @@ describe('IoT Agent Lazy Devices', function() {
         });
     });
 
-    describe('When a context query arrives to the IoT Agent and id query param is not present', function() {
+    describe('When a context query arrives to the IoT Agent and id and type query params are not present', function() {
         var options = {
-                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/entities',
-                method: 'GET',
+                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/op/query',
+                method: 'POST',
                 json: true,
                 headers: {
                     'fiware-service': 'smartGondor',
-                    'fiare-servicepath': 'gardens'
+                    'fiware-servicepath': 'gardens'
+                },
+                body: {
+                    entities: [
+                        {
+                            idPattern: '.*'
+                        }
+                    ]
                 }
             },
             sensorData = [
@@ -662,12 +701,20 @@ describe('IoT Agent Lazy Devices', function() {
 
     describe('When a context query arrives to the IoT Agent and id query param is not present', function() {
         var options = {
-                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/entities?type=Light',
-                method: 'GET',
+                url: 'http://localhost:' + iotAgentConfig.server.port + '/v2/op/query',
+                method: 'POST',
                 json: true,
                 headers: {
                     'fiware-service': 'smartGondor',
-                    'fiare-servicepath': 'gardens'
+                    'fiware-servicepath': 'gardens'
+                },
+                body: {
+                    entities: [
+                        {
+                            idPattern: '.*',
+                            type: 'Light'
+                        }
+                    ]
                 }
             },
             sensorData = [
@@ -724,7 +771,7 @@ describe('IoT Agent Lazy Devices', function() {
             ], done);
         });
 
-        it('should return the information querying the underlying devices', function(done) {
+        it('should return the information querying the underlying devicesx', function(done) {
             var expectedResponse = utils
                 .readExampleFile(
                     './test/unit/ngsiv2/examples/contextProviderResponses/queryInformationResponseWithoutIdArray.json');
@@ -746,13 +793,21 @@ describe('IoT Agent Lazy Devices', function() {
 
     describe('When a query arrives to the IoT Agent with id, type and attributes', function() {
         var options = {
-                url: 'http://localhost:' + iotAgentConfig.server.port +
-                '/v2/entities?id=Light:light1&type=Light&attrs=temperature',
-                method: 'GET',
+                url: 'http://localhost:' + iotAgentConfig.server.port +  '/v2/op/query',
+                method: 'POST',
                 json: true,
                 headers: {
                     'fiware-service': 'smartGondor',
                     'fiware-servicepath': 'gardens'
+                },
+                body: {
+                    entities: [
+                        {
+                            id: 'Light:light1',
+                            type: 'Light'
+                        }
+                    ],
+                    attrs: [ 'temperature' ]
                 }
             },
             sensorData = [
