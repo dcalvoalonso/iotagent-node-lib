@@ -145,8 +145,7 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
 
 describe('IoT Agent Lazy Devices', function() {
     beforeEach(function(done) {
-        //logger.setLevel('FATAL');
-        logger.setLevel('DEBUG');
+        logger.setLevel('FATAL');
 
         var time = new Date(1438760101468); // 2015-08-05T07:35:01.468+00:00
         timekeeper.freeze(time);
