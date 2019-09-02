@@ -770,7 +770,7 @@ describe('IoT Agent Lazy Devices', function() {
             ], done);
         });
 
-        it('should return the information querying the underlying devicesx', function(done) {
+        it('should return the information querying the underlying devices', function(done) {
             var expectedResponse = utils
                 .readExampleFile(
                     './test/unit/ngsiv2/examples/contextProviderResponses/queryInformationResponseWithoutIdArray.json');
