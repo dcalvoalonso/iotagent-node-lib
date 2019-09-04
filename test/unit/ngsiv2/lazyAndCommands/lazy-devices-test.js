@@ -667,9 +667,9 @@ describe('IoT Agent Lazy Devices', function() {
 
             request(options, function(error, response, body) {
                 should.not.exist(error);
-                body.errorCode.code.should.equal(400);
-                body.errorCode.reasonPhrase.should.equal('NotSupported');
-                body.errorCode.details.should.equal('idPattern usage in query');
+                response.statusCode.should.equal(400);
+                body.error.should.equal('BadRequest');
+                body.description.should.equal('idPattern usage in query');
                 done();
             });
         });
@@ -751,9 +751,9 @@ describe('IoT Agent Lazy Devices', function() {
 
             request(options, function(error, response, body) {
                 should.not.exist(error);
-                body.errorCode.code.should.equal(400);
-                body.errorCode.reasonPhrase.should.equal('NotSupported');
-                body.errorCode.details.should.equal('idPattern usage in query');
+                response.statusCode.should.equal(400);
+                body.error.should.equal('BadRequest');
+                body.description.should.equal('idPattern usage in query');
                 done();
             });
         });
