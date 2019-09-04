@@ -145,7 +145,7 @@ var iotAgentLib = require('../../../../lib/fiware-iotagent-lib'),
 
 describe('IoT Agent Lazy Devices', function() {
     beforeEach(function(done) {
-        logger.setLevel('FATAL');
+        logger.setLevel('DEBUG');
 
         var time = new Date(1438760101468); // 2015-08-05T07:35:01.468+00:00
         timekeeper.freeze(time);
@@ -663,36 +663,13 @@ describe('IoT Agent Lazy Devices', function() {
             ], done);
         });
 
-        it('should return the information querying the underlying devices', function(done) {
-            var expectedResponse = utils
-                .readExampleFile(
-                    './test/unit/ngsiv2/examples/contextProviderResponses/queryInformationResponseWithoutId.json');
-            var queryHandlerCalls = 0;
-
-            iotAgentLib.setDataQueryHandler(function(id, type, service, subservice, attributes, callback) {
-                queryHandlerCalls++;
-                if (queryHandlerCalls === 1) {
-                    id.should.equal(device1.id);
-                    type.should.equal(device1.type);
-                    attributes[0].should.equal('temperature');
-                    callback(null, sensorData[0]);                    
-                } else if(queryHandlerCalls === 2) {
-                    id.should.equal(device2.id);
-                    type.should.equal(device2.type);
-                    attributes[0].should.equal('moving');
-                    callback(null, sensorData[1]);   
-                } else if (queryHandlerCalls === 3) {
-                    id.should.equal(device3.id);
-                    type.should.equal(device3.type);
-                    attributes[0].should.equal('moving');
-                    callback(null, sensorData[2]);
-                }
-
-            });
+        it('should return error as idPattern is not supported', function(done) {
 
             request(options, function(error, response, body) {
                 should.not.exist(error);
-                body.should.eql(expectedResponse);
+                body.errorCode.code.should.equal(400);
+                body.errorCode.reasonPhrase.should.equal('NotSupported');
+                body.errorCode.details.should.equal('idPattern usage in query');
                 done();
             });
         });
@@ -770,21 +747,13 @@ describe('IoT Agent Lazy Devices', function() {
             ], done);
         });
 
-        it('should return the information querying the underlying devices', function(done) {
-            var expectedResponse = utils
-                .readExampleFile(
-                    './test/unit/ngsiv2/examples/contextProviderResponses/queryInformationResponseWithoutIdArray.json');
-
-            iotAgentLib.setDataQueryHandler(function(id, type, service, subservice, attributes, callback) {
-                id.should.equal(device1.id);
-                type.should.equal(device1.type);
-                attributes[0].should.equal('temperature');
-                callback(null, sensorData[0]);  
-            });
+        it('should return error as idPattern is not supported', function(done) {
 
             request(options, function(error, response, body) {
                 should.not.exist(error);
-                body.should.eql(expectedResponse);
+                body.errorCode.code.should.equal(400);
+                body.errorCode.reasonPhrase.should.equal('NotSupported');
+                body.errorCode.details.should.equal('idPattern usage in query');
                 done();
             });
         });
